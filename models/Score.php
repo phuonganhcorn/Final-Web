@@ -2,19 +2,17 @@
 
 namespace app\models;
 
-use app\core\Application;
-use app\core\db\DbModel;
+use app\core\db\SearchDbModel;
 
-class Score extends DbModel
+class Score extends SearchDbModel
 {
     public string $student_id = '';
     public string $teacher_id = '';
     public string $subject_id = '';
     public string $score = '';
-
     public string $description = '';
 
-    public function tableName() : string
+    public function tableName(): string
     {
         return 'scores';
     }
@@ -30,25 +28,11 @@ class Score extends DbModel
         ];
     }
 
-    public function attributes() : array
+    public function attributes(): array
     {
         return ['student_id', 'teacher_id', 'subject_id', 'score', 'description'];
     }
 
-    public function upload_attributes() : string
-    {
-        return '';
-    }
-    public function labels() : array
-    {
-        return [
-            'student_id' => 'Sinh viên',
-            'teacher_id' => 'Giáo viên',
-            'subject_id' => 'Môn học',
-            'description' => 'Comment chi tiết',
-            'score' => 'Điểm',
-        ];
-    }
     public function primaryKey(): string
     {
         return 'id';
@@ -61,17 +45,19 @@ class Score extends DbModel
         $subjects = Subject::findAll([], '=', ['id', 'name']);
 
         $studentValue = array_column($students, 'name', 'id');
-
         $teacherValue = array_column($teachers, 'name', 'id');
-
         $subjectValue = array_column($subjects, 'name', 'id');
         $scoreValue = [];
+
         for ($i = 0; $i <= 10; $i++) {
             $scoreValue[$i] = (string) $i;
         }
-        return ['student_id' => $studentValue,
-                'teacher_id' => $teacherValue,
-                'subject_id' => $subjectValue,
-                'score' => $scoreValue];
+
+        return [
+            'student_id' => $studentValue,
+            'teacher_id' => $teacherValue,
+            'subject_id' => $subjectValue,
+            'score' => $scoreValue,
+        ];
     }
 }

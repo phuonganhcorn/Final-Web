@@ -2,10 +2,10 @@
 
 namespace app\models\forms;
 
-use app\core\db\DbModel;
+use app\core\db\SearchDbModel;
 use app\models\Score;
 
-class SearchFormScore extends DbModel
+class SearchFormScore extends SearchDbModel
 {
     public string $student_id = '';
     public string $subject_id = '';
@@ -19,11 +19,13 @@ class SearchFormScore extends DbModel
         $this->search_key = '';
         $this->keyword = ['student_id', 'teacher_id', 'subject_id'];
     }
+
     public function tableName(): string
     {
         return 'scores';
     }
-    public function labels() : array
+
+    public function labels(): array
     {
         return [
             'student_id' => 'Sinh viên',
@@ -47,21 +49,30 @@ class SearchFormScore extends DbModel
         return [];
     }
 
-    public function getSearchValue() : array
+    public function getSearchValue(): array
     {
-        return ['search_key' => '','key_word' => [
-            'student_id' => $this->student_id, 'subject_id' => $this->subject_id, 'teacher_id' => $this->teacher_id]];
+        return [
+            'search_key' => '',
+            'key_word' => [
+                'student_id' => $this->student_id,
+                'subject_id' => $this->subject_id,
+                'teacher_id' => $this->teacher_id,
+            ],
+        ];
     }
 
     public function getClassSearch()
     {
         return Score::class;
     }
-    public function search($searchKey, $searchValue)
+
+    // Adapted search method to handle related models
+    public function search($searchKey, $searchValue, $withRelations = [])
     {
-        return parent::search($searchKey, $searchValue);
+        return parent::search($searchKey, $searchValue, $withRelations);
     }
-    public function getNameSearchKey() : array
+
+    public function getNameSearchKey(): array
     {
         return ['search_key' => $this->search_key, 'key_word' => $this->keyword];
     }
